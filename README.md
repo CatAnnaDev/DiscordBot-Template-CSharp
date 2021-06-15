@@ -6,5 +6,5 @@ one more Discord bot template with json config file
 Done | infos
 --- | ---
 Config | Json config file
-Log | Logging systeme with color
+Log | Log system with color
 Cmds | a bit of commands to see and understand
