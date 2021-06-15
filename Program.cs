@@ -70,8 +70,52 @@ namespace DiscordBotHumEncore
             {
                 if (GlobalData.Config.ReadyLog.Length > 0)
                     Console.WriteLine(GlobalData.Config.ReadyLog);
-
-                await _client.SetGameAsync(GlobalData.Config.Playing_status);
+                var current = GlobalData.Config.Currently;
+                switch (current.ToLower())
+                {
+                    case "playing":
+                        await _client.SetGameAsync(GlobalData.Config.Playing_status,null, ActivityType.Playing);
+                        break;
+                    case "listening":
+                        await _client.SetGameAsync(GlobalData.Config.Playing_status,null, ActivityType.Listening);
+                        break;
+                    case "watching":
+                        await _client.SetGameAsync(GlobalData.Config.Playing_status, null, ActivityType.Watching);
+                        break;
+                    case "streaming":
+                        await _client.SetGameAsync(GlobalData.Config.Playing_status, GlobalData.Config.StreamUrl, ActivityType.Streaming);
+                        break;
+                    case "custom":
+                        await _client.SetGameAsync(GlobalData.Config.Playing_status, null, ActivityType.CustomStatus);
+                        break;
+                    default:
+                        await _client.SetGameAsync(GlobalData.Config.Playing_status);
+                        return;
+                }
+                var stat = GlobalData.Config.Status;
+                switch (stat.ToLower())
+                {
+                    case "online":
+                        await _client.SetStatusAsync(UserStatus.Online);
+                        break;
+                    case "invisible":
+                        await _client.SetStatusAsync(UserStatus.Invisible);
+                        break;
+                    case "donotdisturb":
+                        await _client.SetStatusAsync(UserStatus.DoNotDisturb);
+                        break;
+                    case "idle":
+                        await _client.SetStatusAsync(UserStatus.Idle);
+                        break;
+                    case "offline":
+                        await _client.SetStatusAsync(UserStatus.Offline);
+                        break;
+                    case "afk":
+                        await _client.SetStatusAsync(UserStatus.AFK);
+                        break;
+                    default:
+                        return;
+                }
             }
             catch (Exception ex)
             {

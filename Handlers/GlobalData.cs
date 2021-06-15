@@ -31,12 +31,13 @@ namespace DiscordBotHumEncore.Handlers
                 //BOT
                 Token = "TOKEN HERE",
                 Prefixe = "!",
-                ReadyLog= "i'm ready!",
+                ReadyLog = "i'm ready!",
                 Join_message = "CHANGE ME IN CONFIG",
                 //GameStatus
-                Currently = "playing|listening|watching|streaming",
+                StreamUrl = "",
+                Currently = "playing|listening|watching|streaming|custom",
                 Playing_status = "CHANGE ME IN CONFIG",
-                Status = "online|dnd|idle|offline",
+                Status = "online|Invisible|DoNotDisturb|idle|offline|AFK",
             };
         }
 }

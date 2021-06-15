@@ -9,6 +9,7 @@
         public string Join_message { get; set; }
 
         //GameStatus
+        public string StreamUrl { get; set; }
         public string Currently { get; set; }
         public string Playing_status { get; set; }
         public string Status { get; set; }
