@@ -54,6 +54,9 @@ namespace DiscordBotHumEncore.Services
                 case "discord":
                     return "DISCD";
 
+                case "rest":
+                    return "REST";
+
                 case "audio":
                     return "AUDIO";
 
