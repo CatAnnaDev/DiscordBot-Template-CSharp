@@ -12,25 +12,30 @@ namespace DiscordBotHumEncore.Services
             {
                 severity = LogSeverity.Warning;
             }
-            await Append($"{DateTime.Now,-19} {GetSeverityString(severity)}", GetConsoleColor(severity));
+            await Append($"{DateTime.Now.ToString("dd/MM/yyyy h:mm tt"),-19}| {GetSeverityString(severity)}", GetConsoleColor(severity)); // 15/06/2021 8:45 AM | INFO [DISCD] Discord.Net v2.4.0 (API v6)
+            //await Append($"{DateTime.Now.ToString("HH:mm:ss"),-19}| {GetSeverityString(severity)}", GetConsoleColor(severity)); // 8:45:06 | INFO [DISCD] Discord.Net v2.4.0 (API v6)
+            // https://www.c-sharpcorner.com/blogs/date-and-time-format-in-c-sharp-programming1
             await Append($" [{SourceToString(src)}] ", ConsoleColor.DarkGray);
 
             if (!string.IsNullOrWhiteSpace(message))
                 await Append($"{message}\n", ConsoleColor.White);
             else if (exception == null)
             {
-                await Append("Uknown Exception. Exception Returned Null.\n", ConsoleColor.DarkRed);
+                await Append("Unknown Exception. Exception Returned Null.\n", ConsoleColor.DarkRed);
             }
             else if (exception.Message == null)
-                await Append($"Unknownk \n{exception.StackTrace}\n", GetConsoleColor(severity));
+                await Append($"Unknown \n{exception.StackTrace}\n", GetConsoleColor(severity));
             else
-                await Append($"{exception.Message ?? "Unknownk"}\n{exception.StackTrace ?? "Unknown"}\n", GetConsoleColor(severity));
+                await Append($"{exception.Message ?? "Unknown"}\n{exception.StackTrace ?? "Unknown"}\n", GetConsoleColor(severity));
         }
 
         public static async Task LogCriticalAsync(string source, string message, Exception exc = null)
             => await LogAsync(source, LogSeverity.Critical, message, exc);
 
         public static async Task LogInformationAsync(string source, string message)
+            => await LogAsync(source, LogSeverity.Info, message);
+
+        public static async Task LogSimpleAsync(string source, string message)
             => await LogAsync(source, LogSeverity.Info, message);
 
         private static async Task Append(string message, ConsoleColor color)
@@ -49,9 +54,6 @@ namespace DiscordBotHumEncore.Services
                 case "discord":
                     return "DISCD";
 
-                case "victoria":
-                    return "VICTR";
-
                 case "audio":
                     return "AUDIO";
 
@@ -64,14 +66,8 @@ namespace DiscordBotHumEncore.Services
                 case "blacklist":
                     return "BLAKL";
 
-                case "lavanode_0_socket":
-                    return "LAVAS";
-
-                case "lavanode_0":
-                    return "LAVA#";
-
                 case "bot":
-                    return "BOTWN";
+                    return "BOT";
 
                 default:
                     return src;

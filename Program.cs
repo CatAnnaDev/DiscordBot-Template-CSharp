@@ -5,7 +5,6 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using System.Reflection;
-using System.Linq;
 using DiscordBotHumEncore.Services;
 
 namespace DiscordBotHumEncore
@@ -69,7 +68,9 @@ namespace DiscordBotHumEncore
         {
             try
             {
-                Console.WriteLine(GlobalData.Config.ReadyLog);
+                if (GlobalData.Config.ReadyLog.Length > 0)
+                    Console.WriteLine(GlobalData.Config.ReadyLog);
+
                 await _client.SetGameAsync(GlobalData.Config.Playing_status);
             }
             catch (Exception ex)

@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataStructs\BotConfig.cs" />
+    <Compile Include="Handlers\EmbedHandler.cs" />
     <Compile Include="Handlers\GlobalData.cs" />
     <Compile Include="Modules\Commands.cs" />
     <Compile Include="Program.cs" />
