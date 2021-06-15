@@ -8,3 +8,4 @@ Done | infos
 Config | Json config file
 Log | Log system with color
 Cmds | a bit of commands to see and understand
+Embed | Make Enbed easily and faster
