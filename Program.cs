@@ -5,51 +5,47 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using System.Reflection;
+using System.Linq;
+using DiscordBotHumEncore.Services;
 
 namespace DiscordBotHumEncore
 {
     class Program
     {
-        private DiscordSocketClient client;
-        private CommandService commands;
-        private GlobalData globalData;
+        private DiscordSocketClient _client;
+        private CommandService _commands;
+        private GlobalData _globalData;
 
         static void Main(string[] args) => new Program().Start().GetAwaiter().GetResult();
 
         public async Task Start()
         {
-            client = new DiscordSocketClient(new DiscordSocketConfig
+            _client = new DiscordSocketClient(new DiscordSocketConfig
             {
-              //  LogLevel = LogSeverity.Critical
-              //  LogLevel = LogSeverity.Debug
-              //  LogLevel = LogSeverity.Error
-              //  LogLevel = LogSeverity.Info
-              //  LogLevel = LogSeverity.Verbose
-              //  LogLevel = LogSeverity.Warning
+                //  LogLevel = LogSeverity.Critical
+                //  LogLevel = LogSeverity.Debug
+                //  LogLevel = LogSeverity.Error
+                //  LogLevel = LogSeverity.Info
+                //  LogLevel = LogSeverity.Verbose
+                //  LogLevel = LogSeverity.Warning
             });
-
-            commands = new CommandService();
-            globalData = new GlobalData();
+            _commands = new CommandService();
+            _globalData = new GlobalData();
             
-            client.Log += Log;
-            client.Ready += () =>
-            {
-                Console.WriteLine(GlobalData.Config.ReadyLog);
-                client.SetGameAsync(GlobalData.Config.Playing_status);
-                return Task.CompletedTask;
-            };
+            _client.Log += Log;
+            _client.Ready += ReadyAsync;
 
             await CommandAsync();
             await InitializeGlobalDataAsync();
-            await client.LoginAsync(TokenType.Bot, GlobalData.Config.Token);
-            await client.StartAsync();
+            await _client.LoginAsync(TokenType.Bot, GlobalData.Config.Token);
+            await _client.StartAsync();
             await Task.Delay(-1);
         }
 
         public async Task CommandAsync()
         {
-            client.MessageReceived += HandleCommandAsync;
-            await commands.AddModulesAsync(Assembly.GetEntryAssembly(), null);
+            _client.MessageReceived += HandleCommandAsync;
+            await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), null);
         }
 
         private async Task HandleCommandAsync(SocketMessage msg)
@@ -58,20 +54,32 @@ namespace DiscordBotHumEncore
             if (message == null) return;
             int argPos = 0;
             if (!message.HasStringPrefix(GlobalData.Config.Prefixe, ref argPos)) return;
-            var context = new SocketCommandContext(client, message);
-            var result = await commands.ExecuteAsync(context, argPos, null);
+            var context = new SocketCommandContext(_client, message);
+            var result = await _commands.ExecuteAsync(context, argPos, null);
             if (!result.IsSuccess) 
                 await context.Channel.SendMessageAsync(result.ErrorReason);
         }
 
-        private Task Log(LogMessage arg)
+        private async Task Log(LogMessage arg)
         {
-            Console.WriteLine(arg.ToString());
-            return Task.CompletedTask;
+            await LoggingService.LogAsync(arg.Source, arg.Severity, arg.Message);
+
+        }
+        private async Task ReadyAsync()
+        {
+            try
+            {
+                Console.WriteLine(GlobalData.Config.ReadyLog);
+                await _client.SetGameAsync(GlobalData.Config.Playing_status);
+            }
+            catch (Exception ex)
+            {
+                await LoggingService.LogInformationAsync(ex.Source, ex.Message);
+            }
         }
         private async Task InitializeGlobalDataAsync()
         {
-            await globalData.InitializeAsync();
+            await _globalData.InitializeAsync();
         }
     }
 }
