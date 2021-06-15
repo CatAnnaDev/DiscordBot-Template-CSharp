@@ -33,5 +33,14 @@ namespace DiscordBotHumEncore.Modules
             var reply = EmbedHandler.CreateBasicEmbed("blap", "blapblap", Color.Red);
             await ReplyAsync(null, embed: reply.Result);
         }
+
+        [Command("join")]
+        public async Task JoinChannel(IVoiceChannel chan = null)
+        {
+            chan = chan ?? (Context.User as IGuildUser)?.VoiceChannel;
+            if (chan == null) { await Context.Channel.SendMessageAsync("not in voice channel :x:"); return; }
+            var audioClient = await chan.ConnectAsync();
+            await ReplyAsync(audioClient.ToString());
+        }
     }
 }

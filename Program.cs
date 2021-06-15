@@ -50,6 +50,11 @@ namespace DiscordBotHumEncore
         private async Task HandleCommandAsync(SocketMessage msg)
         {
             var message = (SocketUserMessage)msg;
+            int meow = 0;
+            if (message.HasStringPrefix(GlobalData.Config.Prefixe, ref meow) && !message.Author.IsBot)
+            {
+                Console.WriteLine($"[{message.Author.Username}]:  {message}");
+            } 
             if (message == null) return;
             int argPos = 0;
             if (!message.HasStringPrefix(GlobalData.Config.Prefixe, ref argPos)) return;
